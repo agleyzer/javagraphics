@@ -2,23 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.lang.Math;
 
-class Main {
-    public static void main(String[] args) {
-	Frame frame = new Frame("Square Drawing");
-	frame.setSize(400, 400);
-        
-	frame.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-	
-	frame.add(new SquareCanvas());
-	frame.setVisible(true);
-    }
-}
-
-class SquareCanvas extends Canvas {
+class Main extends Frame {
     private Point3D[] points = new Point3D[]{
 	new Point3D(-1.0, -1.0, 1.0),
 	new Point3D(1.0, -1.0, 1.0),
@@ -59,6 +43,45 @@ class SquareCanvas extends Canvas {
 
     private double scale = 100;
     
+    public Main() {
+	setTitle("Square Drawing");
+	setSize(400, 400);
+	
+	addKeyListener(new KeyAdapter() {
+		@Override
+		public void keyPressed(KeyEvent e) {
+		    int keyCode = e.getKeyCode();
+		    double step = 0.1;
+		    
+		    switch (keyCode) {
+                    case KeyEvent.VK_UP:
+                        angle -= step;
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        angle += step;
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        angle -= step;
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        angle += step;
+                        break;
+		    }
+
+		    repaint();
+		}
+	    });
+	
+	addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+	
+	setVisible(true);
+    }
+
+
     @Override
     public void paint(Graphics g) {
 	super.paint(g);
@@ -101,4 +124,8 @@ class SquareCanvas extends Canvas {
 	    connectPoints(g, i, (i+4));
 	}
     }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> new Main());
+    }    
 }
